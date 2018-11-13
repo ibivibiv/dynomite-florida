@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: dynomitelb
+  labels:
+    app: dynomite
+    role: lb
+    tier: backend
+spec:
+  ports:
+  - port: 8102
+    targetPort: 8102
+    name: dyno
+  selector:
+    app: dynomite
+    role: worker
+    tier: backend

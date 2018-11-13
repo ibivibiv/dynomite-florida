@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: dynomite-florida-deployment-shard-1
+  labels:
+    app: dynomite
+spec:
+  serviceName: "dynomite"
+  replicas: 3
+  selector:
+    matchLabels:
+      app: dynomite
+      role: worker
+      tier: backend
+  template:
+    metadata:
+      labels:
+        app: dynomite
+        role: worker
+        tier: backend
+    spec:
+      containers:
+      - name: worker
+        image: <your dynomite image> 
+        imagePullPolicy: "Always"
+        env:
+        - name: DYNO_TOKEN
+          value: <your token for this statefulset shard>
+        ports:
+        - containerPort: 8101
+        - containerPort: 8102

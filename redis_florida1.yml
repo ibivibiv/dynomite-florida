@@ -1,6 +1,6 @@
 dyn_o_mite:
   datacenter: dc
-  rack: RACK1
+  rack: $RACK_ID
   dyn_listen: 0.0.0.0:8101
   dyn_seed_provider: florida_provider
   listen: 0.0.0.0:8102

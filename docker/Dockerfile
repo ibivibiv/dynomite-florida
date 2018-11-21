@@ -12,6 +12,7 @@ RUN apt-get install -y sudo gnupg2 curl wget
 
 #set up the config 
 RUN mkdir /dynomiteconfig
+RUN wget https://raw.githubusercontent.com/ibivibiv/dynomite-florida/master/alpha_parse.py
 RUN cd /dynomiteconfig && wget https://raw.githubusercontent.com/ibivibiv/dynomite-florida/master/dynomite_single.yml
 RUN mv /dynomiteconfig/dynomite_single.yml /config/dynomite.yml
 

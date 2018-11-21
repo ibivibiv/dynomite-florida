@@ -1,7 +1,7 @@
 #!/bin/bash
 #trickery here to use the ordinal id to give that rackname for the config for dynomite
 export ORDINAL_ID=${HOSTNAME##*-} 
-export RACK_ID='RACK'$ORDINAL_ID
+export RACK_ID='us-east-'$ORDINAL_ID'b'
 envsubst '$RACK_ID' <conf/redis_single.yml | tee conf/redis_single.yml
 envsubst '${DYNO_TOKEN}' <conf/redis_single.yml | tee conf/redis_single.yml
 #Start redis server on 22122

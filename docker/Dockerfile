@@ -1,6 +1,7 @@
 #Download base image from known working dyomite conductor image
-FROM gleam/dynomite
- 
+#FROM gleam/dynomite
+FROM v1r3n/dynomite
+
 # Update Software repository
 #RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys FB3291D9
 #RUN add-apt-repository "deb https://apt.dynomitedb.com/ trusty main"
@@ -12,6 +13,7 @@ RUN apt-get install -y sudo gnupg2 curl wget
 
 #set up the config 
 RUN mkdir /dynomiteconfig
+RUN mkdir /config
 RUN wget https://raw.githubusercontent.com/ibivibiv/dynomite-florida/master/alpha_parse.py
 RUN cd /dynomiteconfig && wget https://raw.githubusercontent.com/ibivibiv/dynomite-florida/master/dynomite_single.yml
 RUN mv /dynomiteconfig/dynomite_single.yml /config/dynomite.yml

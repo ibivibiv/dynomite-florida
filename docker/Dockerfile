@@ -12,8 +12,8 @@ RUN apt-get install -y sudo gnupg2 curl wget
 
 #set up the config 
 RUN mkdir /dynomiteconfig
-RUN cd /dynomiteconfig && wget https://raw.githubusercontent.com/ibivibiv/dynomite-florida/master/redis_florida.yml
-RUN mv /dynomiteconfig/redis_florida.yml /config/dynomite.yml
+RUN cd /dynomiteconfig && wget https://raw.githubusercontent.com/ibivibiv/dynomite-florida/master/dynomite_single.yml
+RUN mv /dynomiteconfig/dynomite_single.yml /config/dynomite.yml
 
 # Configure Services and Port
 COPY start.sh /start.sh

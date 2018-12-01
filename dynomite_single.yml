@@ -12,7 +12,7 @@ dyn_o_mite:
   data_store: 0
   read_consistency : DC_SAFE_QUORUM
   write_consistency : DC_SAFE_QUORUM
-  enable_gossip: false
+  
 
 
 

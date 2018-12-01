@@ -8,7 +8,7 @@ dyn_o_mite:
   - 127.0.0.1:22122:1
   tokens: 0
   secure_server_option: datacenter
-  pem_key_file: /config/dynomite.pem
+  pem_key_file: /etc/dynomitedb/dynomite.pem
   data_store: 0
   read_consistency : DC_SAFE_QUORUM
   write_consistency : DC_SAFE_QUORUM

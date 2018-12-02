@@ -6,7 +6,7 @@ import redis
 import socket
 import logging
 import sys
-
+import random
 
 def main():
 
@@ -27,7 +27,7 @@ def main():
     REDISPORT = 22122
     STARTUPSLEEP = 60
     WARMUPSLEEP = 120
-    RESUMESLEEP = 5
+    RESUMESLEEP = 15
 
     #time for some logging that will help make the console logs visible in pod logs for debug
     root = logging.getLogger()
@@ -76,13 +76,17 @@ def main():
 
         logging.info("got list "+str(len(list.items)))
 
-        for item in list.items:
+        set = list.items
+
+        random.shuffle(set)
+
+        for item in set :
 
             ip = item.status.pod_ip
             logging.info("got ip "+ip)
             # make sure you aren't talking to yourself first dummy!
-            if ip in myip:
-                continue
+            #if ip in myip:
+            #    continue
             node_state_url = HTTP + ip + DYNOPORT + GETSTATE
             logging.info("node state url "+node_state_url)
 
@@ -91,31 +95,32 @@ def main():
             # we walk the list and find a node in "normal" mode, we don't want anyone else that is being warmed up
             state = requests.get(node_state_url)
 
-            logging.info("got state ")
+            logging.info("got state "+state.text)
 
-            if NORMAL in state:
+            if NORMAL in state.text :
                 # we make ourselves a slave of this with redis
-                r = redis.StrictRedis(host=myip, port=REDISPORT, decode_responses=True)
+                r = redis.StrictRedis(host=ip, port=REDISPORT, decode_responses=True)
                 logging.info('got redis client')
 
-                info = r.info()
+                keys = sum(1 for _ in r.scan_iter('*'))
 
-                logging.info('got info')
+                logging.info('got scan')
 
-                keycount = int(info['db0']['keys'])
+                logging.info(keys)
 
-                logging.info('got keycount'+str(keycount))
                 #we don't care about empty nodes
-                if keycount <= 0 :
+                if keys <= 0 :
+                    logging.info("skipping")
                     continue
-
-                r.slaveof(host=ip, port=REDISPORT)
+                command1 = "echo SLAVEOF " + ip + " 22122 | redis-cli -p 22122"
+                os.system(command1)
                 logging.info('set slave of '+ip)
                 # we give that sync a chance to work and there needs to be a better way to do this but I researched and No for now
                 time.sleep(WARMUPSLEEP)
                 # now we make ourselves a slave of no one  FREE AT LAST!!!
-                r.slaveof(None)
+                os.system("echo SLAVEOF NO ONE  | redis-cli -p 22122")
                 logging.info("redis replicated")
+                break
 
         # now we put ourselves in resuming mode
         requests.get(LOCALHOST + RESUMING)

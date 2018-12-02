@@ -27,7 +27,7 @@ def main():
     REDISPORT = 22122
     STARTUPSLEEP = 60
     WARMUPSLEEP = 120
-    RESUMESLEEP = 15
+    RESUMESLEEP = 5
 
     #time for some logging that will help make the console logs visible in pod logs for debug
     root = logging.getLogger()
@@ -67,7 +67,7 @@ def main():
         # first lets put this one in write only
         # this should keep the node from getting read before it is ready
 
-        #requests.get(LOCALHOST + WRITESONLY)
+        requests.get(LOCALHOST + WRITESONLY)
 
         logging.info("set write only")
 
@@ -118,7 +118,7 @@ def main():
                 logging.info("redis replicated")
 
         # now we put ourselves in resuming mode
-        #requests.get(LOCALHOST + RESUMING)
+        requests.get(LOCALHOST + RESUMING)
 
         logging.info("set resuming")
 
@@ -126,7 +126,7 @@ def main():
         time.sleep(RESUMESLEEP)
 
         # put the node into normal and we are good!
-        #requests.get(LOCALHOST + NORMALSTATE)
+        requests.get(LOCALHOST + NORMALSTATE)
 
         logging.info("set to normal")
 

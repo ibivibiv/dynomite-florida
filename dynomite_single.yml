@@ -13,11 +13,11 @@ dyn_o_mite:
   read_consistency : DC_ONE
   write_consistency : DC_ONE
   stats_listen: 0.0.0.0:22222
-  resilient_pool_with_timeout:
-    auto_eject_hosts: true
-    server_retry_timeout: 30000
-    server_failure_limit: 3
-    timeout: 400
+  auto_eject_hosts: true
+  server_retry_timeout: 30000
+  server_failure_limit: 3
+  timeout: 400
+  hash: murmur
   enable_gossip: false
   
 

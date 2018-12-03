@@ -12,6 +12,11 @@ dyn_o_mite:
   data_store: 0
   read_consistency : DC_ONE
   write_consistency : DC_ONE
+  resilient_pool_with_timeout:
+    auto_eject_hosts: true
+    server_retry_timeout: 30000
+    server_failure_limit: 3
+    timeout: 400
   enable_gossip: false
   
 

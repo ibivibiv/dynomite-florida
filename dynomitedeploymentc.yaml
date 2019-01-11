@@ -1,1 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dynomitec
+  labels:
+    app: dynomite
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dynomite
+      role: worker
+      rack: c
+  template:
+    metadata:
+      labels:
+        app: dynomite
+        role: worker
+        rack: c
+    spec:
+      containers:
+      - name: redis
+        image: ibivibiv/redis
+        ports:
+        - containerPort: 22122
+      - name: rediswarmer
+        image: ibivibiv/rediswarmer
+        imagePullPolicy: "Always"
+        env:
+        - name: DYNO_TOKEN
+          value: "'4294967295'"
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+      - name: dynowarmer
+        image: ibivibiv/dynomitewarmer
+        imagePullPolicy: "Always"
+        env:
+        - name: DYNO_TOKEN
+          value: "'4294967295'"
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+      - name: worker
+        image: ibivibiv/dynomiteflorida
+        imagePullPolicy: "Always"
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        readinessProbe:
+          httpGet:
+            path: /ping
+            port: 22222
+          initialDelaySeconds: 30
+          timeoutSeconds: 1
+          periodSeconds: 15
+        livenessProbe:
+          httpGet:
+            path: /ping            
+            port: 22222
+          initialDelaySeconds: 120
+          timeoutSeconds: 1
+          periodSeconds: 15
+        ports:
+        - containerPort: 8101
+        - containerPort: 8102
+        - containerPort: 22222
 

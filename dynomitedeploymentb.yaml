@@ -10,13 +10,13 @@ spec:
     matchLabels:
       app: dynomite
       role: worker
-      rack: a
+      rack: b
   template:
     metadata:
       labels:
         app: dynomite
         role: worker
-        rack: a
+        rack: b
     spec:
       containers:
       - name: redis

@@ -1,0 +1,23 @@
+dyn_o_mite:
+  datacenter: dc
+  rack: us-east-1c
+  dyn_listen: 0.0.0.0:8101
+  dyn_seeds:
+  - 44.201.10.147:8101:us-east-1a:dc:4294967295
+  - 44.201.254.65:8101:us-east-1b:dc:4294967295
+  listen: 0.0.0.0:8102
+  servers:
+  - 127.0.0.1:22122:1
+  tokens: '4294967295'
+  secure_server_option: datacenter
+  pem_key_file: /etc/dynomitedb/dynomite.pem
+  data_store: 0
+  read_consistency : DC_ONE
+  write_consistency : DC_ONE
+  stats_listen: 0.0.0.0:22222
+  auto_eject_hosts: true
+  server_retry_timeout: 30000
+  server_failure_limit: 3
+  timeout: 400
+  hash: murmur
+  enable_gossip: false

@@ -3,7 +3,8 @@ dyn_o_mite:
   rack: us-east-1a
   dyn_listen: 0.0.0.0:8101
   dyn_seeds:
-  - dynomiteseed2:8101:rack:dc:3530913378
+  - 44.201.254.65:8101:us-east-1b:dc:4294967295
+  - 44.201.68.123:8101:us-east-1c:dc:4294967295
   listen: 0.0.0.0:8102
   servers:
   - 127.0.0.1:22122:1

@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: dynomite-florida-deployment-shard-1
+  name: us-east-1
   labels:
     app: dynomite
 spec:
@@ -12,20 +12,73 @@ spec:
       app: dynomite
       role: worker
       tier: backend
+      dc: us-east-1
+      token: "4294967295"
   template:
     metadata:
       labels:
         app: dynomite
         role: worker
         tier: backend
+        status: standby
+        dc: us-east-1
+        token: "4294967295"
     spec:
+      volumes:
+        - name: nfs-volume
+          persistentVolumeClaim: 
+            claimName: nfs-pvc
       containers:
-      - name: worker
-        image: <your dynomite image> 
+      - name: redis
+        image: ibivibiv/redisnfs
+        volumeMounts:
+        - name: nfs-volume
+          mountPath: /data
+        ports:
+        - containerPort: 22122
+      - name: rediswarmer
+        image: ibivibiv/rediswarmersandbox
         imagePullPolicy: "Always"
         env:
         - name: DYNO_TOKEN
-          value: <your token for this statefulset shard>
+          value: "'4294967295'"
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+      - name: dynowarmer
+        image: ibivibiv/dynomitewarmersandbox
+        imagePullPolicy: "Always"
+        env:
+        - name: DYNO_TOKEN
+          value: "'4294967295'"
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+      - name: worker
+        image: ibivibiv/dynomiteflorida
+        imagePullPolicy: "Always"
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        readinessProbe:
+          httpGet:
+            path: /ping
+            port: 22222
+          initialDelaySeconds: 30
+          timeoutSeconds: 1
+          periodSeconds: 15
+        livenessProbe:
+          httpGet:
+            path: /ping            
+            port: 22222
+          initialDelaySeconds: 120
+          timeoutSeconds: 1
+          periodSeconds: 15
         ports:
         - containerPort: 8101
         - containerPort: 8102
+        - containerPort: 22222
